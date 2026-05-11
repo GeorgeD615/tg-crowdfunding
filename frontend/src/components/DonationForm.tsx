@@ -7,10 +7,6 @@ type Props = {
     current: string;
 };
 
-// function formatTON(amount: string): string {
-//     return (Number(amount) / 1e9).toFixed(2);
-// }
-
 export function DonationForm({ disabled, onSubmit, goal, current }: Props) {
     const [amount, setAmount] = useState('1');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,6 +18,12 @@ export function DonationForm({ disabled, onSubmit, goal, current }: Props) {
         e.preventDefault();
         if (disabled || isSubmitting) return;
         
+        // Проверка что сумма не пустая и больше 0
+        const numAmount = parseFloat(amount);
+        if (isNaN(numAmount) || numAmount <= 0) {
+            return;
+        }
+        
         setIsSubmitting(true);
         try {
             await onSubmit(amount);
@@ -30,6 +32,23 @@ export function DonationForm({ disabled, onSubmit, goal, current }: Props) {
             setIsSubmitting(false);
         }
     }
+    
+    // Обработчик изменения с валидацией
+    const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = e.target.value;
+        
+        // Разрешаем пустую строку
+        if (value === '') {
+            setAmount('');
+            return;
+        }
+        
+        // Проверяем что введено число
+        const numValue = parseFloat(value);
+        if (!isNaN(numValue)) {
+            setAmount(value);
+        }
+    };
     
     return (
         <section className="card donation-form-card">
@@ -41,9 +60,10 @@ export function DonationForm({ disabled, onSubmit, goal, current }: Props) {
                         <input
                             type="number"
                             min="0.01"
-                            step="0.1"
+                            step="0.01"
                             value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
+                            onChange={handleAmountChange}
+                            placeholder="Enter amount in TON"
                             required
                             disabled={disabled}
                         />
@@ -54,7 +74,7 @@ export function DonationForm({ disabled, onSubmit, goal, current }: Props) {
                     🎯 Still needed: <strong>{remainingTON} TON</strong> to reach goal
                 </p>
                 <button type="submit" disabled={disabled || isSubmitting} className="donate-btn">
-                    {isSubmitting ? 'Processing...' : `Donate ${amount} TON`}
+                    {isSubmitting ? 'Processing...' : `Donate ${amount || '0'} TON`}
                 </button>
             </form>
         </section>

@@ -1,5 +1,7 @@
 {
-  "url": "https://tg-crowdfunding.web.app",
-  "name": "TG Crowdfunding",
-  "iconUrl": "https://tg-crowdfunding.web.app/favicon.svg"
+  "url": "https://ton-crowdfunding-app.web.app",
+  "name": "TON Crowdfunding",
+  "iconUrl": "https://ton-crowdfunding-app.web.app/icon.png",
+  "termsOfUseUrl": "https://ton-crowdfunding-app.web.app/terms",
+  "privacyPolicyUrl": "https://ton-crowdfunding-app.web.app/privacy"
 }

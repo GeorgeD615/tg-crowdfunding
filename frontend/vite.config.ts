@@ -7,17 +7,40 @@ export default defineConfig({
         host: true,
         port: 5173,
     },
+    preview: {
+        host: true,
+        port: 4173,
+    },
     define: {
-        'global': 'globalThis',
         'process.env': {},
-        'Buffer': ['buffer', 'Buffer'],
+        'global': 'globalThis',
     },
     resolve: {
         alias: {
-            buffer: 'buffer',
+            'buffer': 'buffer',
+            'process': 'process/browser',
         },
     },
     optimizeDeps: {
-        include: ['buffer', 'process'],
+        include: ['buffer', 'process', '@ton/core', '@tonconnect/ui-react'],
+        esbuildOptions: {
+            define: {
+                global: 'globalThis',
+            },
+        },
+    },
+    build: {
+        target: 'es2020',
+        sourcemap: false,
+        commonjsOptions: {
+            transformMixedEsModules: true,
+        },
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: ['react', 'react-dom', '@tonconnect/ui-react'],
+                },
+            },
+        },
     },
 });
