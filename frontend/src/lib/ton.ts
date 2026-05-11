@@ -20,6 +20,7 @@ export function buildDonatePayload(amount: bigint): string {
         .storeUint(amount, 64)
         .endCell();
     
+    console.log("Donate payload built:", { amount, op: CROWD_FUNDING_OPS.DONATE });
     return toBase64(body.toBoc());
 }
 
@@ -28,6 +29,7 @@ export function buildWithdrawPayload(): string {
         .storeUint(CROWD_FUNDING_OPS.WITHDRAW, 32)
         .endCell();
     
+    console.log("Withdraw payload built, op:", CROWD_FUNDING_OPS.WITHDRAW);
     return toBase64(body.toBoc());
 }
 
@@ -36,5 +38,6 @@ export function buildRefundPayload(): string {
         .storeUint(CROWD_FUNDING_OPS.REFUND, 32)
         .endCell();
     
+    console.log("Refund payload built, op:", CROWD_FUNDING_OPS.REFUND);
     return toBase64(body.toBoc());
 }

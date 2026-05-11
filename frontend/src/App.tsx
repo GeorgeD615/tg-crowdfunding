@@ -109,16 +109,16 @@ function App() {
                 validUntil: Math.floor(Date.now() / 1000) + 300,
                 messages: [{
                     address: CONTRACT_ADDRESS!,
-                    amount: '50000000', // 0.05 TON for gas
+                    amount: '100000000', // Увеличим до 0.1 TON для надежности
                     payload,
                 }],
             });
-            setTxStatus('Withdraw successful!');
+            setTxStatus('Withdraw successful! Funds will arrive shortly');
             await loadCampaignData();
             setTimeout(() => setTxStatus(null), 5000);
         } catch (err) {
             console.error(err);
-            setError('Withdraw failed');
+            setError('Withdraw failed: ' + (err instanceof Error ? err.message : 'Unknown error'));
             setTimeout(() => setError(null), 5000);
         }
     }

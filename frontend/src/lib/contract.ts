@@ -20,6 +20,18 @@ class ContractService {
             throw new Error('Contract address not configured');
         }
         
+        // Правильное форматирование stack для TON Center API
+        const formattedStack = stack.map(item => {
+            if (Array.isArray(item) && item[0] === 'address') {
+                // Для address используем специальный формат с тремя элементами
+                return ['address', item[1]];
+            }
+            if (typeof item === 'string' && item.startsWith('0:')) {
+                return ['address', item];
+            }
+            return item;
+        });
+        
         try {
             const response = await fetch(`${TON_API_ENDPOINT}/runGetMethod`, {
                 method: 'POST',
@@ -30,7 +42,7 @@ class ContractService {
                 body: JSON.stringify({
                     address: CONTRACT_ADDRESS,
                     method: method,
-                    stack: stack,
+                    stack: formattedStack,
                 }),
             });
             
@@ -46,6 +58,7 @@ class ContractService {
             throw error;
         }
     }
+
     
     private parseNumberFromStack(stack: any[]): string {
         if (!stack || stack.length === 0) return '0';

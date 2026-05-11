@@ -117,14 +117,18 @@ contract CrowdfundingContract with Deployable {
         require(self.campaign.status == STATUS_SUCCESS, "CAMPAIGN_NOT_SUCCESSFUL");
         require(self.campaign.status != STATUS_WITHDRAWN, "ALREADY_WITHDRAWN");
         
+        // Сохраняем сумму до изменения статуса
+        let amount = self.campaign.totalRaised;
+        
         self.campaign.status = STATUS_WITHDRAWN;
         
-        self.emitEvent(OP_WITHDRAW, self.campaign.owner, self.campaign.totalRaised, 0);
+        self.emitEvent(OP_WITHDRAW, self.campaign.owner, amount, 0);
         
+        // Отправляем ВСЕ собранные средства owner
         send(SendParameters{
             to: self.campaign.owner,
-            value: self.campaign.totalRaised,
-            mode: SendRemainingValue
+            value: amount,
+            mode: SendRemainingValue  // Отправляем все оставшиеся деньги
         });
     }
 
@@ -218,9 +222,9 @@ contract CrowdfundingContract with Deployable {
             && campaignStatus == STATUS_FAILED;
     }
     
+    // ИСПРАВЛЕННЫЙ ГЕТТЕР
     get fun can_withdraw(): Bool {
-        return self.campaign.status == STATUS_SUCCESS 
-            && self.campaign.status != STATUS_WITHDRAWN;
+        return self.campaign.status == STATUS_SUCCESS;
     }
     
     get fun get_remaining_time(): Int {
