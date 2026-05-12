@@ -58,12 +58,12 @@ contract CrowdfundingContract with Deployable {
         }
         
         if (op == OP_WITHDRAW) {
-            self.handleWithdraw(msg);
+            self.handleWithdraw();
             return;
         }
         
         if (op == OP_REFUND) {
-            self.handleRefund(msg);
+            self.handleRefund();
             return;
         }
         
@@ -75,6 +75,7 @@ contract CrowdfundingContract with Deployable {
         require(now() < self.campaign.deadline, "DEADLINE_PASSED");
         require(self.campaign.totalRaised < self.campaign.goal, "GOAL_ALREADY_REACHED");
         
+        // Для доната грузим сумму, но можно не использовать, если берем из context().value
         let donationAmount = body.loadUint(64);
         let value = context().value;
         
@@ -107,7 +108,7 @@ contract CrowdfundingContract with Deployable {
         self.emitEvent(OP_DONATE, donor, donationAmount, self.campaign.totalRaised);
     }
 
-    fun handleWithdraw(body: Slice) {
+    fun handleWithdraw() {
         require(sender() == self.campaign.owner, "ONLY_OWNER");
         require(self.campaign.status == STATUS_SUCCESS, "CAMPAIGN_NOT_SUCCESSFUL");
         require(self.campaign.status != STATUS_WITHDRAWN, "ALREADY_WITHDRAWN");
@@ -125,7 +126,7 @@ contract CrowdfundingContract with Deployable {
         });
     }
 
-    fun handleRefund(body: Slice) {
+    fun handleRefund() {
         require(now() > self.campaign.deadline, "TOO_EARLY_FOR_REFUND");
         require(self.campaign.totalRaised < self.campaign.goal, "GOAL_REACHED_NO_REFUND");
         require(self.campaign.status == STATUS_ACTIVE, "CAMPAIGN_ALREADY_FINALIZED");

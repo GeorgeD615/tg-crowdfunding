@@ -8,8 +8,8 @@ export async function run(provider: NetworkProvider) {
     const MY_RAW_ADDRESS = "0:84f7607aec3ffcd3bdb7796dad672ed40ab438b05338d78092d00d5587bed9d3";
     const owner = Address.parse(MY_RAW_ADDRESS);
     
-    const goal = toNano('1');  // 1 TON 
-    const deadline = BigInt(now + 600);  // 10 минут
+    const goal = toNano('100');  // 100 TON 
+    const deadline = BigInt(now + 60 * 60 * 24 * 7);  // 7 дней
     
     const contract = provider.open(
         await CrowdfundingContract.fromInit(owner, goal, deadline)
