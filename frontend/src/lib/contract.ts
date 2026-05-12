@@ -20,10 +20,8 @@ class ContractService {
             throw new Error('Contract address not configured');
         }
         
-        // Правильное форматирование stack для TON Center API
         const formattedStack = stack.map(item => {
             if (Array.isArray(item) && item[0] === 'address') {
-                // Для address используем специальный формат с тремя элементами
                 return ['address', item[1]];
             }
             if (typeof item === 'string' && item.startsWith('0:')) {
@@ -63,7 +61,6 @@ class ContractService {
     private parseNumberFromStack(stack: any[]): string {
         if (!stack || stack.length === 0) return '0';
         
-        // Handle different stack value formats
         const first = stack[0];
         if (Array.isArray(first)) {
             if (first[0] === 'num') {
@@ -74,7 +71,6 @@ class ContractService {
             }
         }
         
-        // Try to parse as direct value
         if (typeof first === 'object' && first !== null) {
             if ('value' in first) return String(first.value);
             if ('num' in first) return String(first.num);
@@ -111,7 +107,6 @@ class ContractService {
         const first = stack[0];
         if (Array.isArray(first)) {
             if (first[0] === 'cell' && first[1]) {
-                // This is simplified - in production you'd need to parse the cell
                 return CONTRACT_ADDRESS || '';
             }
             if (first[0] === 'address') {
@@ -124,35 +119,27 @@ class ContractService {
     
     async getCampaignInfo(): Promise<CampaignInfo> {
         try {
-            // Get total raised
             const totalResult = await this.callGetMethod('get_total_raised');
             const totalRaised = this.parseNumberFromStack(totalResult.stack);
             
-            // Get goal
             const goalResult = await this.callGetMethod('get_goal');
             const goal = this.parseNumberFromStack(goalResult.stack);
             
-            // Get deadline
             const deadlineResult = await this.callGetMethod('get_deadline');
             const deadline = this.parseNumberFromStack(deadlineResult.stack);
             
-            // Get status
             const statusResult = await this.callGetMethod('get_status');
             const status = parseInt(this.parseNumberFromStack(statusResult.stack));
             
-            // Get owner
             const ownerResult = await this.callGetMethod('get_owner');
             const owner = this.parseAddressFromStack(ownerResult.stack);
             
-            // Get remaining time
             const remainingResult = await this.callGetMethod('get_remaining_time');
             const remainingTime = parseInt(this.parseNumberFromStack(remainingResult.stack));
             
-            // Get progress percentage
             const progressResult = await this.callGetMethod('get_progress_percentage');
             const progress = parseInt(this.parseNumberFromStack(progressResult.stack));
             
-            // Check if can withdraw
             const withdrawResult = await this.callGetMethod('can_withdraw');
             const canWithdraw = this.parseBooleanFromStack(withdrawResult.stack);
             

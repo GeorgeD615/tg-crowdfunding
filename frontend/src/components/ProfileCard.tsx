@@ -17,7 +17,6 @@ export function ProfileCard({ user, walletAddress }: Props) {
         [user?.first_name, user?.last_name].filter(Boolean).join(' ') || 
         'Anonymous User';
 
-    // Get initials for avatar fallback
     const initials = displayName
         .split(' ')
         .map(n => n[0])

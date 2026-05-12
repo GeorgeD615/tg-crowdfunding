@@ -26,7 +26,6 @@ describe('CrowdfundingContract', () => {
         deployer = await blockchain.treasury('deployer');
         donor = await blockchain.treasury('donor');
         
-        // Add more funds to deployer
         await deployer.send({
             to: deployer.address,
             value: toNano('1000'),
@@ -38,7 +37,7 @@ describe('CrowdfundingContract', () => {
         
         const deployResult = await contract.send(
             deployer.getSender(),
-            { value: toNano('0.5') }, // Increase deployment gas
+            { value: toNano('0.5') },
             { $$type: 'Deploy', queryId: 0n }
         );
         
@@ -56,7 +55,7 @@ describe('CrowdfundingContract', () => {
         
         const result = await contract.send(
             donor.getSender(),
-            { value: donationAmount + toNano('0.1') }, // Add gas
+            { value: donationAmount + toNano('0.1') },
             donateMessage.beginParse()
         );
         
@@ -77,7 +76,6 @@ describe('CrowdfundingContract', () => {
     it('should allow owner to withdraw after goal reached', async () => {
         const donationAmount = goal;
         
-        // Make the full donation
         const donateMessage = beginCell()
             .storeUint(OP_DONATE, 32)
             .storeUint(donationAmount, 64)
@@ -91,35 +89,30 @@ describe('CrowdfundingContract', () => {
         
         console.log('Donate result:', donateResult.transactions.length);
         
-        // Check goal was reached
         const totalRaised = await contract.getGetTotalRaised();
         console.log('Total raised:', totalRaised.toString());
         expect(totalRaised).toEqual(goal);
         
-        // Check status is SUCCESS
         let status = await contract.getGetStatus();
         console.log('Status after donation:', status.toString());
         expect(status).toEqual(STATUS_SUCCESS);
         
-        // Check can withdraw
         const canWithdraw = await contract.getCanWithdraw();
         console.log('Can withdraw:', canWithdraw);
         expect(canWithdraw).toEqual(true);
         
-        // Withdraw
         const withdrawMessage = beginCell()
             .storeUint(OP_WITHDRAW, 32)
             .endCell();
         
         const withdrawResult = await contract.send(
             deployer.getSender(),
-            { value: toNano('0.1') }, // More gas for withdrawal
+            { value: toNano('0.1') },
             withdrawMessage.beginParse()
         );
         
         console.log('Withdraw result:', withdrawResult.transactions.length);
         
-        // Check status changed to WITHDRAWN
         const finalStatus = await contract.getGetStatus();
         console.log('Final status:', finalStatus.toString());
         expect(finalStatus).toEqual(STATUS_WITHDRAWN);
@@ -128,7 +121,6 @@ describe('CrowdfundingContract', () => {
     it('should allow refund if goal not reached', async () => {
         const donationAmount = toNano('10');
         
-        // Make donation (not reaching goal)
         const donateMessage = beginCell()
             .storeUint(OP_DONATE, 32)
             .storeUint(donationAmount, 64)
@@ -140,37 +132,31 @@ describe('CrowdfundingContract', () => {
             donateMessage.beginParse()
         );
         
-        // Verify donation was recorded
         let totalRaised = await contract.getGetTotalRaised();
         expect(totalRaised).toEqual(donationAmount);
         
-        // Fast forward past deadline
-        blockchain.now = Number(deadline) + 4000; // Well past deadline
+        blockchain.now = Number(deadline) + 4000;
         
-        // Check that campaign failed
         const statusBeforeRefund = await contract.getGetStatus();
         console.log('Status before refund:', statusBeforeRefund.toString());
         expect(statusBeforeRefund).toEqual(STATUS_FAILED);
         
-        // Check can refund
         const canRefund = await contract.getCanRefund(donor.address);
         console.log('Can refund:', canRefund);
         expect(canRefund).toEqual(true);
         
-        // Request refund
         const refundMessage = beginCell()
             .storeUint(OP_REFUND, 32)
             .endCell();
         
         const refundResult = await contract.send(
             donor.getSender(),
-            { value: toNano('0.1') }, // More gas for refund
+            { value: toNano('0.1') },
             refundMessage.beginParse()
         );
         
         console.log('Refund result:', refundResult.transactions.length);
         
-        // Check donation was refunded
         const donation = await contract.getGetDonation(donor.address);
         expect(donation).toBeDefined();
         if (donation) {

@@ -1,5 +1,6 @@
 import type { CampaignInfo } from '../types';
 
+
 type Props = {
     campaign: CampaignInfo | null;
     myDonation: string;
@@ -30,12 +31,11 @@ function formatTime(seconds: number): string {
     return `${hours}h remaining`;
 }
 
+const VITE_OWNER_WALLET_ADDRESS = import.meta.env.VITE_OWNER_WALLET_ADDRESS;
 export function CampaignCard({ campaign, myDonation, walletAddress, onWithdraw, onRefund }: Props) {
     if (!campaign) return null;
 
-    const MY_WALLET = "0QCE92B67D_80723eW2tZy7UCrQ4sFM414CS0A1Vh77Z09HC";
-    const isOwner = walletAddress === MY_WALLET;
-    //const isActive = campaign.status === 0;
+    const isOwner = walletAddress === VITE_OWNER_WALLET_ADDRESS;
     const isSuccess = campaign.status === 1;
     const currentAmount = formatTON(campaign.totalRaised);
     const goalAmount = formatTON(campaign.goal);
@@ -45,7 +45,7 @@ export function CampaignCard({ campaign, myDonation, walletAddress, onWithdraw, 
     return (
         <section className="card campaign-card">
             <div className="campaign-header">
-                <h2>🎯 Campaign Details</h2>
+                <h2>Campaign Details</h2>
                 <span className={`status-badge status-${campaign.status}`}>
                     {getStatusText(campaign.status)}
                 </span>
@@ -64,19 +64,19 @@ export function CampaignCard({ campaign, myDonation, walletAddress, onWithdraw, 
                 </div>
                 <div className="stats-row">
                     <span>Progress: {campaign.progressPercentage}%</span>
-                    <span>⏰ {formatTime(campaign.remainingTime)}</span>
+                    <span>{formatTime(campaign.remainingTime)}</span>
                 </div>
             </div>
 
             {Number(myDonation) > 0 && (
                 <div className="my-donation">
-                    💰 Your donation: <strong>{myDonationAmount} TON</strong>
+                    Your donation: <strong>{myDonationAmount} TON</strong>
                 </div>
             )}
 
             <div className="campaign-footer">
                 <p className="muted">
-                    <strong>Owner:</strong> {campaign.owner.slice(0, 8)}...{campaign.owner.slice(-6)}
+                    <strong>Owner:</strong> {VITE_OWNER_WALLET_ADDRESS.slice(0, 8)}...{VITE_OWNER_WALLET_ADDRESS.slice(-6)}
                 </p>
                 <p className="muted">
                     <strong>Deadline:</strong> {new Date(campaign.deadline * 1000).toLocaleString()}
@@ -85,7 +85,7 @@ export function CampaignCard({ campaign, myDonation, walletAddress, onWithdraw, 
 
             {isOwner && campaign.canWithdraw && (
                 <button onClick={onWithdraw} className="withdraw-btn">
-                    💸 Withdraw Funds ({currentAmount} TON)
+                    Withdraw Funds ({currentAmount} TON)
                     <span style={{ fontSize: '12px', display: 'block', opacity: 0.8 }}>
                         Gas fee: ~0.05-0.1 TON
                     </span>
@@ -94,7 +94,7 @@ export function CampaignCard({ campaign, myDonation, walletAddress, onWithdraw, 
 
             {!isOwner && !isSuccess && isDeadlinePassed && !campaign.canWithdraw && (
                 <button onClick={onRefund} className="refund-btn">
-                    ↩️ Request Refund
+                    Request Refund
                 </button>
             )}
         </section>

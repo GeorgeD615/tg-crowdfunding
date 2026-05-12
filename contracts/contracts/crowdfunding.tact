@@ -1,20 +1,16 @@
 import "@stdlib/deploy";
 
-// Operation codes
-const OP_DONATE: Int = 0x444f4e45;     // DONE
-const OP_WITHDRAW: Int = 0x57495448;   // WITH
-const OP_REFUND: Int = 0x52454655;     // REFU
+const OP_DONATE: Int = 0x444f4e45;
+const OP_WITHDRAW: Int = 0x57495448;
+const OP_REFUND: Int = 0x52454655;
 
-// Campaign status
 const STATUS_ACTIVE: Int = 0;
 const STATUS_SUCCESS: Int = 1;
 const STATUS_FAILED: Int = 2;
 const STATUS_WITHDRAWN: Int = 3;
 
-// Constants (in nano-TON)
 const MIN_DONATION: Int = 10000000; // 0.01 TON
 
-// Donation record
 struct Donation {
     donor: Address;
     amount: Int as uint64;
@@ -22,7 +18,6 @@ struct Donation {
     isRefunded: Bool;
 }
 
-// Campaign structure
 struct Campaign {
     owner: Address;
     goal: Int as uint64;
@@ -117,18 +112,16 @@ contract CrowdfundingContract with Deployable {
         require(self.campaign.status == STATUS_SUCCESS, "CAMPAIGN_NOT_SUCCESSFUL");
         require(self.campaign.status != STATUS_WITHDRAWN, "ALREADY_WITHDRAWN");
         
-        // Сохраняем сумму до изменения статуса
         let amount = self.campaign.totalRaised;
         
         self.campaign.status = STATUS_WITHDRAWN;
         
         self.emitEvent(OP_WITHDRAW, self.campaign.owner, amount, 0);
         
-        // Отправляем ВСЕ собранные средства owner
         send(SendParameters{
             to: self.campaign.owner,
             value: amount,
-            mode: SendRemainingValue  // Отправляем все оставшиеся деньги
+            mode: SendRemainingValue
         });
     }
 
@@ -170,7 +163,6 @@ contract CrowdfundingContract with Deployable {
         self.eventCounter = self.eventCounter + 1;
     }
 
-    // Getters
     get fun get_campaign(): Campaign {
         return self.campaign;
     }
@@ -222,7 +214,6 @@ contract CrowdfundingContract with Deployable {
             && campaignStatus == STATUS_FAILED;
     }
     
-    // ИСПРАВЛЕННЫЙ ГЕТТЕР
     get fun can_withdraw(): Bool {
         return self.campaign.status == STATUS_SUCCESS;
     }

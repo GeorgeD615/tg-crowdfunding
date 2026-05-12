@@ -22,7 +22,7 @@ function App() {
     const [error, setError] = useState<string | null>(null);
     const [txStatus, setTxStatus] = useState<string | null>(null);
     console.log(canRefund)
-    // Initialize Telegram WebApp
+
     useEffect(() => {
         initTelegramWebApp();
         const user = getTelegramUser();
@@ -30,14 +30,14 @@ function App() {
         console.log('Telegram user:', user);
     }, []);
     
-    // Load campaign data periodically
+
     useEffect(() => {
         loadCampaignData();
         const interval = setInterval(loadCampaignData, 10000);
         return () => clearInterval(interval);
     }, []);
     
-    // Load user's donation when wallet connects
+
     useEffect(() => {
         if (walletAddress) {
             loadUserDonation();
@@ -109,7 +109,7 @@ function App() {
                 validUntil: Math.floor(Date.now() / 1000) + 300,
                 messages: [{
                     address: CONTRACT_ADDRESS!,
-                    amount: '100000000', // Увеличим до 0.1 TON для надежности
+                    amount: '100000000',
                     payload,
                 }],
             });
@@ -133,7 +133,7 @@ function App() {
                 validUntil: Math.floor(Date.now() / 1000) + 300,
                 messages: [{
                     address: CONTRACT_ADDRESS!,
-                    amount: '50000000', // 0.05 TON for gas
+                    amount: '50000000',
                     payload,
                 }],
             });
@@ -168,7 +168,7 @@ function App() {
         <main className="app-shell">
             <header className="top-header">
                 <div>
-                    <h1>🎯 Crowdfunding on TON</h1>
+                    <h1>Crowdfunding on TON</h1>
                     <p className="muted">Support this project with TON blockchain</p>
                 </div>
                 <TonConnectButton />
@@ -206,9 +206,9 @@ function App() {
             )}
             
             <section className="card muted-card">
-                <p><strong>📜 Contract:</strong> {CONTRACT_ADDRESS}</p>
-                <p><strong>🌐 Network:</strong> {import.meta.env.VITE_TON_NETWORK || 'testnet'}</p>
-                <p><strong>⚡ Status:</strong> {campaign?.status === 0 ? 'Active' : campaign?.status === 1 ? 'Success' : 'Completed'}</p>
+                <p><strong>Contract:</strong> {CONTRACT_ADDRESS}</p>
+                <p><strong>Network:</strong> {import.meta.env.VITE_TON_NETWORK || 'testnet'}</p>
+                <p><strong>Status:</strong> {campaign?.status === 0 ? 'Active' : campaign?.status === 1 ? 'Success' : 'Completed'}</p>
             </section>
         </main>
     );

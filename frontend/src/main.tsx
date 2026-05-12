@@ -1,12 +1,9 @@
-// Сначала загружаем полифиллы
 import './buffer-polyfill';
 
-// Проверка что Buffer.alloc существует
 if (typeof Buffer !== 'undefined' && Buffer.alloc) {
     console.log('[Main] Buffer is ready, alloc exists');
 } else {
     console.error('[Main] Buffer.alloc is not available!');
-    // Экстренный fallback
     if (typeof Buffer !== 'undefined' && !Buffer.alloc) {
         Buffer.alloc = (size: number) => new Uint8Array(size);
         console.log('[Main] Emergency Buffer.alloc added');

@@ -18,7 +18,6 @@ export function DonationForm({ disabled, onSubmit, goal, current }: Props) {
         e.preventDefault();
         if (disabled || isSubmitting) return;
         
-        // Проверка что сумма не пустая и больше 0
         const numAmount = parseFloat(amount);
         if (isNaN(numAmount) || numAmount <= 0) {
             return;
@@ -33,17 +32,14 @@ export function DonationForm({ disabled, onSubmit, goal, current }: Props) {
         }
     }
     
-    // Обработчик изменения с валидацией
     const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = e.target.value;
         
-        // Разрешаем пустую строку
         if (value === '') {
             setAmount('');
             return;
         }
         
-        // Проверяем что введено число
         const numValue = parseFloat(value);
         if (!isNaN(numValue)) {
             setAmount(value);
@@ -52,7 +48,7 @@ export function DonationForm({ disabled, onSubmit, goal, current }: Props) {
     
     return (
         <section className="card donation-form-card">
-            <h2>💎 Support This Project</h2>
+            <h2>Support This Project</h2>
             <form onSubmit={handleSubmit} className="donation-form">
                 <div className="amount-input">
                     <label>Amount (TON)</label>
@@ -71,7 +67,7 @@ export function DonationForm({ disabled, onSubmit, goal, current }: Props) {
                     </div>
                 </div>
                 <p className="remaining-hint">
-                    🎯 Still needed: <strong>{remainingTON} TON</strong> to reach goal
+                    Still needed: <strong>{remainingTON} TON</strong> to reach goal
                 </p>
                 <button type="submit" disabled={disabled || isSubmitting} className="donate-btn">
                     {isSubmitting ? 'Processing...' : `Donate ${amount || '0'} TON`}

@@ -1,9 +1,9 @@
 import { beginCell } from '@ton/core';
 
 export const CROWD_FUNDING_OPS = {
-    DONATE: 0x444f4e45,  // DONE
-    WITHDRAW: 0x57495448, // WITH
-    REFUND: 0x52454655,   // REFU
+    DONATE: 0x444f4e45,  
+    WITHDRAW: 0x57495448, 
+    REFUND: 0x52454655,   
 } as const;
 
 function toBase64(bytes: Uint8Array): string {
