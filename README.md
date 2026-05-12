@@ -80,11 +80,14 @@ opcode (uint32)
 ## Deployment (Testnet)
 
 ### Текущий развернутый контракт
-- Testnet address: kQAC33wHICte9NmLNpNhDIGyvdB138EEZ1u852TtmZk2_iuW
-- Explorer: https://testnet.tonscan.org/address/kQAC33wHICte9NmLNpNhDIGyvdB138EEZ1u852TtmZk2_iuW
+- Testnet address: kQB424GDK3gDGaCscdXxk5U5b3vpXkOIx7drIaT8RXKLO0-N
+- Explorer: https://testnet.tonscan.org/address/kQB424GDK3gDGaCscdXxk5U5b3vpXkOIx7drIaT8RXKLO0-N
 
+### Telegram Bot
+- Telegram Mini App доступен через бот @crowdfunding_dav_bot
+- Приложение развёрнуто через firebase по адресу: https://ton-crowdfunding-app.web.app/
 
-### Локальная разработка
+### Локальная сборка
 
 #### 1) Contract
 
@@ -95,6 +98,18 @@ npx blueprint build
 npx blueprint test
 npx blueprint run  # deploy to testnet
 ```
+
+- После деплоя скопируйте адрес контракта в .env.
+- Настройка API ключа TON Center
+- Зарегистрируйтесь на TON Center
+- Получите API ключ в личном кабинете
+
+```
+VITE_CONTRACT_ADDRESS=kQAC33wHICte9NmLNpNhDIGyvdB138EEZ1u852TtmZk2_iuW
+VITE_TON_API_ENDPOINT=https://testnet.toncenter.com/api/v2
+VITE_TON_API_KEY=your_api_key_here
+```
+
 #### 2) Frontend
 ```
 cd frontend
@@ -102,16 +117,6 @@ npm install
 npm run dev
 Приложение будет доступно по адресу http://localhost:5173
 ```
-После деплоя скопируйте адрес контракта в .env.
-- Настройка API ключа TON Center
-- Зарегистрируйтесь на TON Center
-- Получите API ключ в личном кабинете
-- Добавьте ключ в .env для увеличения лимитов запросов
 
-```
-VITE_CONTRACT_ADDRESS=kQAC33wHICte9NmLNpNhDIGyvdB138EEZ1u852TtmZk2_iuW
-VITE_TON_API_ENDPOINT=https://testnet.toncenter.com/api/v2
-VITE_TON_API_KEY=your_api_key_here
-```
 
 
