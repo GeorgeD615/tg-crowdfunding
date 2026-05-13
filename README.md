@@ -1,6 +1,6 @@
 # TON Crowdfunding Telegram Mini App
 
-Production-ready краудфандинг платформа для сбора средств, работающая как Telegram Mini App с escrow-контрактом на TON blockchain.
+Краудфандинг платформа для сбора средств, работающая как Telegram Mini App с escrow-контрактом на TON blockchain.
 
 ## Features
 
