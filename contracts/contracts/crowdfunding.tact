@@ -75,7 +75,6 @@ contract CrowdfundingContract with Deployable {
         require(now() < self.campaign.deadline, "DEADLINE_PASSED");
         require(self.campaign.totalRaised < self.campaign.goal, "GOAL_ALREADY_REACHED");
         
-        // Для доната грузим сумму, но можно не использовать, если берем из context().value
         let donationAmount = body.loadUint(64);
         let value = context().value;
         
